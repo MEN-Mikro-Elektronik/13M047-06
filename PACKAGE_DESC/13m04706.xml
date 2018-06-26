@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Klaus Popp (MEN Mikro Elektronik GmbH) -->
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="packagedesc.xsd">
+	<name>13m04706</name>
+	<description>MDIS5 driver package for MEN M47 M-Module</description>
+	<date>2013-06-18</date>
+	<revision>2.2</revision>
+	<docroot>DRIVERS/MDIS_LL/M047/DOC/main.html</docroot>
+	<modellist>
+		<model>
+			<hwname>M47</hwname>
+			<description>SSI Interface</description>
+			<devtype>MDIS</devtype>
+			<autoid>
+				<mmoduleid>0x5346002f</mmoduleid>
+			</autoid>
+			<busif>M-Module</busif>
+		</model>
+	</modellist>
+	<settinglist>
+		<setting>
+			<name>ID_CHECK</name>
+			<description>Define wether M-Module ID-PROM is checked</description>
+			<type>U_INT32</type>
+			<defaultvalue>1</defaultvalue>
+			<choises>
+				<choise>
+					<value>1</value>
+					<description>enable</description>
+				</choise>
+				<choise>
+					<value>0</value>
+					<description>disable -- ignore IDPROM</description>
+				</choise>
+			</choises>
+		</setting>
+		<setting>
+			<name>M47_CONTROL</name>
+			<description>Baudrate and bits in data word. See user manual.</description>
+			<type>U_INT32</type>
+			<defaultvalue>0x00000080</defaultvalue>
+		</setting>
+		<setting>
+			<name>M47_TRANSMODE</name>
+			<description>Transmission mode</description>
+			<type>U_INT32</type>
+			<defaultvalue>0x00000000</defaultvalue>
+			<choises>
+				<choise>
+					<value>0x00000000</value>
+					<description>Gray</description>
+				</choise>
+				<choise>
+					<value>0x00000080</value>
+					<description>binary</description>
+				</choise>
+			</choises>
+		</setting>
+	</settinglist>
+	<swmodulelist>
+		<swmodule>
+			<name>m47</name>
+			<description>Driver for M47</description>
+			<type>Low Level Driver</type>
+			<makefilepath>M047/DRIVER/COM/driver.mak</makefilepath>
+		</swmodule>
+		<swmodule>
+			<name>m47_simp</name>
+			<description>Simple example program for the M47 driver</description>
+			<type>Driver Specific Tool</type>
+			<makefilepath>M047/EXAMPLE/M47_SIMP/COM/program.mak</makefilepath>
+		</swmodule>
+		<swmodule>
+			<name>m47_tool</name>
+			<description>Tool program for the M47 driver</description>
+			<type>Driver Specific Tool</type>
+			<makefilepath>M047/TOOLS/M47_TOOL/COM/program.mak</makefilepath>
+		</swmodule>
+		<swmodule internal="true">
+			<name>m47_test</name>
+			<description>Test program for the M47 driver</description>
+			<type>Driver Specific Tool</type>
+			<makefilepath>M047/TEST/M47_TEST/COM/program.mak</makefilepath>
+		</swmodule>
+	</swmodulelist>
+</package>

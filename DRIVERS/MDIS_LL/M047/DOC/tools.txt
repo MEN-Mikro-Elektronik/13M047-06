@@ -1,0 +1,47 @@
+Program Description
+===================
+Tue Apr 29 12:42:40  2003
+ 
+Overview of all Programs
+------------------------
+
+m47_simp         - M47 example for reading form a channel
+m47_tool         - M47 tool program for reading all channels
+
+Program m47_simp
+----------------
+
+Usage:
+   m47_simp <device>
+
+Function:
+   M47 example for reading form a channel
+
+Options:
+   (none)
+Description:
+   Simple example program for the M47 driver   
+   
+   Reads value form SSI-device    
+   
+Program m47_tool
+----------------
+
+Usage:
+   m47_tool <device>
+
+Function:
+   M47 tool program for reading all channels
+
+Options:
+   (none)
+Description:
+   M47 tool program   
+   
+   This tool program first checks the HW-Revision of the M47.   
+   Depending on the module revision, the program asks for the      
+   initialization parameters for all channels (up to HW-Rev. 1.5)   
+   or for separate parameter for each channel (HW-Rev. 2.0 or   
+   higher). Then it cyclically read the values of all channels    
+   from SSI-device.   
+   

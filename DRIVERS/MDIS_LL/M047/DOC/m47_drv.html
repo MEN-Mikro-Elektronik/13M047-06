@@ -1,0 +1,430 @@
+<html>
+<head>
+<title>M047 driver</title>
+<style type=text/css>
+    Body { background-color: #ffffff; }
+    A:link { color: #c50038; }
+    A:hover { color: #28669b; }
+    P, H1, H2, H3, H3, H5, LI {
+        color: #434343;
+        font-family: Arial, Helvetica, Univers;
+    }
+    P, LI { font-size: 9.000000pt; }
+</style>
+</head>
+<body>
+<h1>M047 driver</h1>
+<p>Tue Apr 29 12:42:38  2003</p>
+<h2>Overview of all Functions</h2>
+<a name="chapt0"><a href="#intro0"><h3>Low-level driver for M47 M-Modules</h3></a>
+<TABLE border=1>
+<TR><TD><P><B>Function</B></P></TD><TD><P><B>Description</B></P></TD></TR>
+
+<TR><TD><P><a href="#M47_GetEntry">M47_GetEntry</a></P></TD><TD><P>Initialize driver's jump table </P></TD></TR>
+<TR><TD><P><a href="#M47_Init">M47_Init</a></P></TD><TD><P>Allocate and return low-level handle, initialize hardware </P></TD></TR>
+<TR><TD><P><a href="#M47_Exit">M47_Exit</a></P></TD><TD><P>De-initialize hardware and clean up memory </P></TD></TR>
+<TR><TD><P><a href="#M47_Read">M47_Read</a></P></TD><TD><P>Read a value from the device </P></TD></TR>
+<TR><TD><P><a href="#M47_Write">M47_Write</a></P></TD><TD><P>Do nothing </P></TD></TR>
+<TR><TD><P><a href="#M47_SetStat">M47_SetStat</a></P></TD><TD><P>Set the driver status </P></TD></TR>
+<TR><TD><P><a href="#M47_GetStat">M47_GetStat</a></P></TD><TD><P>Get the driver status </P></TD></TR>
+<TR><TD><P><a href="#M47_BlockRead">M47_BlockRead</a></P></TD><TD><P>Read a data block (values of channels 0..3) from the device. </P></TD></TR>
+<TR><TD><P><a href="#M47_BlockWrite">M47_BlockWrite</a></P></TD><TD><P>Do nothing </P></TD></TR>
+<TR><TD><P><a href="#M47_Irq">M47_Irq</a></P></TD><TD><P>Do nothing </P></TD></TR>
+<TR><TD><P><a href="#M47_Info">M47_Info</a></P></TD><TD><P>Get information about hardware and driver requirements </P></TD></TR>
+</TABLE>
+ 
+<a name="intro0"><h1>Low-level driver for M47 M-Modules </h1></a>
+<pre>
+The M47 M-Module is a Serial Synchronous Interface (SSI)
+M-Module with 4 input ports and interrupt capabilities.
+
+The driver handles the M47 input ports as 4 channels:
+channel 0..3.
+
+The direction of each channel cannot be altered.
+
+Usage of interrupts is not implemented in this driver.
+
+Required: OSS, DESC, DBG, ID libraries 
+Switches: _ONE_NAMESPACE_PER_DRIVER_
+
+</pre>
+<a name="M47_GetEntry"><h2>Function M47_GetEntry()</h2></a>
+
+<h3>Syntax</h3>
+<pre>#ifdef _ONE_NAMESPACE_PER_DRIVER_
+    extern void LL_GetEntry( LL_ENTRY* drvP )
+#else
+# ifndef MAC_BYTESWAP
+    extern void M47_GetEntry( LL_ENTRY* drvP )
+# else
+    extern void M47_SW_GetEntry( LL_ENTRY* drvP )
+# endif /* MAC_BYTESWAP */
+#endif
+</pre><h3>Description</h3>
+<pre>Initialize driver's jump table
+
+</pre><h3>Input</h3>
+<pre>---
+</pre><h3>Output</h3>
+<pre>drvP  pointer to the initialized jump table structure
+</pre>
+<a name="M47_Init"><h2>Function M47_Init()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Init(
+    DESC_SPEC       *descP,
+    OSS_HANDLE      *osHdl,
+    MACCESS         *ma,
+    OSS_SEM_HANDLE  *devSemHdl,
+    OSS_IRQ_HANDLE  *irqHdl,
+    LL_HANDLE       **llHdlP
+)
+</pre><h3>Description</h3>
+<pre>Allocate and return low-level handle, initialize hardware
+
+The function initializes all channels with the 
+definitions made in the descriptor. The interrupt 
+is always disabled.
+
+The following descriptor keys are used:
+
+Descriptor key        Default          Range
+--------------------  ---------------  -------------
+DEBUG_LEVEL_DESC      OSS_DBG_DEFAULT  see dbg.h
+DEBUG_LEVEL           OSS_DBG_DEFAULT  see dbg.h
+ID_CHECK              1                0..1
+M47_CONTROL           0x00000080       see below
+M47_TRANSMODE         0x00000000       0x00000000 (Gray)
+                                       0x00000080 (binary)
+
+M47_CONTROL sets the baud rate and number of bits in
+    a data word:
+
+    Bit       31..8         7..2      1..0
+         +----------------------------------+ 
+         | 0   ...   0 |     BW    |   BR   |
+         +----------------------------------+
+
+    BW: number of bits in data word (bit width), 1..32
+        0 0 0 0 0 0 = stop transmission
+        0 0 0 0 0 1 = 1 bit in data word
+        ..
+        1 0 0 0 0 0 = 32 bits in data word
+        Other values are not permitted!
+
+    BR: 0 0 = 500 kbaud
+        0 1 = 250 kbaud
+        1 0 = 125 kbaud
+        1 1 = 62.5 kbaud
+</pre><h3>Input</h3>
+<pre>descSpec   pointer to descriptor data
+osHdl      oss handle
+ma         hw access handle
+devSemHdl  device semaphore handle
+irqHdl     irq handle
+</pre><h3>Output</h3>
+<pre>llHdlP     pointer to low-level driver handle
+return     success (0) or error code
+</pre>
+<a name="M47_Exit"><h2>Function M47_Exit()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Exit(
+   LL_HANDLE    **llHdlP
+)
+</pre><h3>Description</h3>
+<pre>De-initialize hardware and clean up memory
+
+The function stops the transmission by setting the data
+width to 0 (i.e. it writes 0x0000 to the Control Register).
+The interrupt is disabled.
+
+</pre><h3>Input</h3>
+<pre>llHdlP    pointer to low-level driver handle
+</pre><h3>Output</h3>
+<pre>return    success (0) or error code
+</pre>
+<a name="M47_Read"><h2>Function M47_Read()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Read(
+    LL_HANDLE *llHdl,
+    int32 ch,
+    int32 *valueP
+)
+</pre><h3>Description</h3>
+<pre>Read a value from the device
+
+The function reads the input state of the current channel.
+The routine writes it's read value into a variable of 
+type unsigned long. The bits beginning from the least 
+significant bit up to the maximum number of bits (defined
+by the data width) are valid.
+
+Bit  32 ...      max ...                 0
+    +-------------------------------------+
+    |  reserved  |     valid data         |
+    +-------------------------------------+
+</pre><h3>Input</h3>
+<pre>llHdl    low-level handle
+ch       current channel
+</pre><h3>Output</h3>
+<pre>valueP   read value
+return   success (0) or error code
+</pre>
+<a name="M47_Write"><h2>Function M47_Write()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Write(
+    LL_HANDLE *llHdl,
+    int32 ch,
+    int32 value
+)
+</pre><h3>Description</h3>
+<pre>Do nothing
+
+</pre><h3>Input</h3>
+<pre>llHdl    low-level handle
+ch       current channel
+value    value to write 
+</pre><h3>Output</h3>
+<pre>return   error code
+</pre>
+<a name="M47_SetStat"><h2>Function M47_SetStat()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_SetStat(
+    LL_HANDLE *llHdl,
+    int32  code,
+    int32  ch,
+    INT32_OR_64 value32_or_64
+)
+</pre><h3>Description</h3>
+<pre>Set the driver status
+
+The following status codes are supported:
+
+Code                 Description                 Values
+-------------------  --------------------------  ----------
+M_LL_DEBUG_LEVEL     driver debug level          see dbg.h
+M_MK_IRQ_ENABLE      interrupt enable            0..1
+M_LL_IRQ_COUNT       interrupt counter           0..max
+M_LL_CH_DIR          direction of curr. chan.    M_CH_???
+M47_BAUDRATE         baud rate for SSI device    0..3
+M47_DATA_WIDTH       data width                  0..32
+M47_TRANS_MODE       transmission mode           0 (Gray) 
+                                                 1 (binary)
+
+M47_BAUDRATE sets the baud rate for the SSI device:
+    0 = 500 kbaud
+    1 = 250 kbaud
+    2 = 125 kbaud
+    3 = 62.5 kbaud
+    (see also m47_drv.h #define M47_BAUD_XXX)
+
+The following codes are only valid in conjunction with M47
+HW revision 2.0 or higher!
+
+M47_BAUDRATE_CH      baudrate for specific CH    see 
+                                                 M47_BAUDRATE
+M47_DATA_WIDTH_CH    data width for specific CH  0..32
+M47_TRANS_MODE_CH    trans. mode for spceific CH 0 (Gray) 
+                                                 1 (binary)
+
+</pre><h3>Input</h3>
+<pre>llHdl           low-level handle
+code            status code
+ch              current channel
+value32_or_64   data or
+                pointer to block data structure (M_SG_BLOCK)(*)
+                (*) = for block status codes
+</pre><h3>Output</h3>
+<pre>return          success (0) or error code
+</pre>
+<a name="M47_GetStat"><h2>Function M47_GetStat()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_GetStat(
+    LL_HANDLE *llHdl,
+    int32  code,
+    int32  ch,
+    INT32_OR_64 *value32_or_64P
+)
+</pre><h3>Description</h3>
+<pre>Get the driver status
+
+The following status codes are supported:
+
+Code                 Description                 Values
+-------------------  --------------------------  ----------
+M_LL_DEBUG_LEVEL     driver debug level          see dbg.h
+M_LL_CH_NUMBER       number of channels          0..4
+M_LL_CH_DIR          direction of curr. chan.    M_CH_???
+M_LL_CH_LEN          length of curr. ch. [bits]  1..max
+M_LL_CH_TYP          description of curr. chan.  M_CH_???
+M_LL_IRQ_COUNT       interrupt counter           0..max
+M_LL_ID_CHECK        ID is checked               0..1
+M_LL_ID_SIZE         EEPROM size [bytes]         128
+M_LL_BLK_ID_DATA     EEPROM raw data             -
+M_MK_BLK_REV_ID      ident function table ptr    -
+M47_CHECK_CONNECT    check sensor connection     see below
+M47_BAUDRATE         baudrate for transmission   0..3 
+M47_DATA_WIDTH       width of data word          0..32
+M47_TRANS_MODE       transmission mode           0 (Gray) 
+                                                 1 (binary)
+M47_PLD_REV          PLD revision number         0..max
+
+M47_CHECK_CONNECT checks the sensor connection:
+    Bit      7..4        3..0
+        +------------------------+ 
+        |     RES    |TD|TC|TB|TA|
+        +------------------------+
+    RES: reserved
+    TD = 1: channel D is transferring data
+    TC = 1: channel C is transferring data
+    TB = 1: channel B is transferring data
+    TA = 1: channel A is transferring data
+
+M47_BAUDRATE gets the baud rate for transmission:
+    0 = 500 kbaud
+    1 = 250 kbaud
+    2 = 125 kbaud
+    3 = 62.5 kbaud
+   (see m47_drv.h)
+
+M47_HW_REV           HW Revision of module       0..max  
+
+The following codes are only valid in conjunction with M47
+HW revision 2.0 or higher!
+
+M47_BAUDRATE_CH      baudrate for specific CH    see 
+                                                 M47_BAUDRATE
+M47_DATA_WIDTH_CH    data width for specific CH  0..32
+M47_TRANS_MODE_CH    trans. mode for spceific CH 0 (Gray) 
+                                                 1 (binary)
+
+</pre><h3>Input</h3>
+<pre>llHdl             low-level handle
+code              status code
+ch                current channel
+value32_or_64P    pointer to block data structure (M_SG_BLOCK)(*) 
+                  (*) = for block status codes
+</pre><h3>Output</h3>
+<pre>value32_or_64P    data pointer or
+                  pointer to block data structure (M_SG_BLOCK)(*) 
+return            success (0) or error code
+                  (*) = for block status codes
+</pre>
+<a name="M47_BlockRead"><h2>Function M47_BlockRead()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_BlockRead(
+     LL_HANDLE *llHdl,
+     int32     ch,
+     void      *buf,
+     int32     size,
+     int32     *nbrRdBytesP
+)
+</pre><h3>Description</h3>
+<pre>Read a data block (values of channels 0..3) from the device.
+The variable buf must be a pointer to unsigned long (u_int32)
+array with space for 4 values. The location of data in the
+buffer is shown below.
+
+    buf[0]      buf[1]       buf[2]       buf[3]
++-------------------------------------------------+
+|   value   |    value   |    value   |   value   |
+| channel 0 |  channel 1 |  channel 2 | channel 3 |
++-------------------------------------------------+
+</pre><h3>Input</h3>
+<pre>llHdl        low-level handle
+ch           current channel
+buf          data buffer
+size         data buffer size
+</pre><h3>Output</h3>
+<pre>nbrRdBytesP  number of read bytes
+return       success (0) or error code
+</pre>
+<a name="M47_BlockWrite"><h2>Function M47_BlockWrite()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_BlockWrite(
+     LL_HANDLE *llHdl,
+     int32     ch,
+     void      *buf,
+     int32     size,
+     int32     *nbrWrBytesP
+)
+</pre><h3>Description</h3>
+<pre>Do nothing
+
+</pre><h3>Input</h3>
+<pre>llHdl        low-level handle
+ch           current channel
+buf          data buffer
+size         data buffer size
+</pre><h3>Output</h3>
+<pre>nbrWrBytesP  number of written bytes
+return       error code
+</pre>
+<a name="M47_Irq"><h2>Function M47_Irq()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Irq(
+   LL_HANDLE *llHdl
+)
+</pre><h3>Description</h3>
+<pre>Do nothing
+The function returns LL_IRQ_UNKNOWN, because no interrupts
+are used in this driver.
+</pre><h3>Input</h3>
+<pre>llHdl    low-level handle
+</pre><h3>Output</h3>
+<pre>return   LL_IRQ_UNKNOWN   unknown
+
+</pre>
+<a name="M47_Info"><h2>Function M47_Info()</h2></a>
+
+<h3>Syntax</h3>
+<pre>static int32 M47_Info(
+   int32  infoType,
+   ...
+)
+</pre><h3>Description</h3>
+<pre>Get information about hardware and driver requirements
+
+The following info codes are supported:
+
+Code                      Description
+------------------------  -----------------------------
+LL_INFO_HW_CHARACTER      hardware characteristics
+LL_INFO_ADDRSPACE_COUNT   nr of required address spaces
+LL_INFO_ADDRSPACE         address space information
+LL_INFO_IRQ               interrupt required
+LL_INFO_LOCKMODE          process lock mode required
+
+The LL_INFO_HW_CHARACTER code returns all address and 
+data modes (ORed) which are supported by the hardware
+(MDIS_MAxx, MDIS_MDxx).
+
+The LL_INFO_ADDRSPACE_COUNT code returns the number
+of address spaces used by the driver.
+
+The LL_INFO_ADDRSPACE code returns information about one
+specific address space (MDIS_MAxx, MDIS_MDxx). The returned 
+data mode represents the widest hardware access used by 
+the driver.
+
+The LL_INFO_IRQ code returns whether the driver supports an
+interrupt routine (TRUE or FALSE).
+
+The LL_INFO_LOCKMODE code returns which process locking
+mode the driver needs (LL_LOCK_xxx).
+</pre><h3>Input</h3>
+<pre>infoType     info code
+...          argument(s)
+</pre><h3>Output</h3>
+<pre>return       success (0) or error code
+</pre></body>
+</html>
