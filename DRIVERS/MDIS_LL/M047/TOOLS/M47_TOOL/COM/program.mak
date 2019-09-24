@@ -1,23 +1,19 @@
 #***************************  M a k e f i l e  *******************************
 #
 #         Author: Gromann
-#          $Date: 2004/03/23 15:39:49 $
-#      $Revision: 1.1 $
 #
 #    Description: Makefile definitions for the M47 tool program
 #
-#---------------------------------[ History ]---------------------------------
-#
-#   $Log: program.mak,v $
-#   Revision 1.1  2004/03/23 15:39:49  AGromann
-#   Initial Revision
-#
-#
 #-----------------------------------------------------------------------------
-#   (c) Copyright 2003 by MEN mikro elektronik GmbH, Nuernberg, Germany
+#   Copyright 2003-2019, MEN Mikro Elektronik GmbH
 #*****************************************************************************
 
 MAK_NAME=m47_tool
+# the next line is updated during the MDIS installation
+STAMPED_REVISION="_"
+
+DEF_REVISION=MAK_REVISION=$(STAMPED_REVISION)
+MAK_SWITCH=$(SW_PREFIX)$(DEF_REVISION)
 
 MAK_LIBS=$(LIB_PREFIX)$(MEN_LIB_DIR)/mdis_api$(LIB_SUFFIX)	\
 		 $(LIB_PREFIX)$(MEN_LIB_DIR)/usr_oss$(LIB_SUFFIX)

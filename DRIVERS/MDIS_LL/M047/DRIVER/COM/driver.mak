@@ -1,30 +1,21 @@
 #***************************  M a k e f i l e  *******************************
 #
 #         Author: kp
-#          $Date: 2002/03/20 09:32:14 $
-#      $Revision: 1.3 $
 #
 #    Description: Makefile definitions for the M47 driver
 #
-#---------------------------------[ History ]---------------------------------
-#
-#   $Log: driver.mak,v $
-#   Revision 1.3  2002/03/20 09:32:14  Schmidt
-#   unused mbuf library and header file removed
-#
-#   Revision 1.2  2001/07/23 14:32:37  ww
-#   included m47_flex.h in list of dependency
-#
-#   Revision 1.1  1999/11/18 15:20:00  Gromann
-#   Initial Revision
-#
 #-----------------------------------------------------------------------------
-#   (c) Copyright 1999 by MEN mikro elektronik GmbH, Nuernberg, Germany
+#   Copyright 1999-2019, MEN Mikro Elektronik GmbH
 #*****************************************************************************
 
 MAK_NAME=m47
+# the next line is updated during the MDIS installation
+STAMPED_REVISION="_"
 
-MAK_SWITCH=$(SW_PREFIX)MAC_MEM_MAPPED
+DEF_REVISION=MAK_REVISION=$(STAMPED_REVISION)
+
+MAK_SWITCH=$(SW_PREFIX)MAC_MEM_MAPPED \
+		$(SW_PREFIX)$(DEF_REVISION)
 
 MAK_LIBS=$(LIB_PREFIX)$(MEN_LIB_DIR)/desc$(LIB_SUFFIX)	\
          $(LIB_PREFIX)$(MEN_LIB_DIR)/oss$(LIB_SUFFIX)	\

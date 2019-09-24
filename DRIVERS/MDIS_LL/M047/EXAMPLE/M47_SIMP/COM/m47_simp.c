@@ -5,8 +5,6 @@
  ****************************************************************************
  *  
  *       Author: ag
- *        $Date: 2013/06/18 18:03:40 $
- *    $Revision: 1.6 $
  *
  *  Description: Simple example program for the M47 driver
  *
@@ -15,36 +13,11 @@
  *     Required: libraries: mdis_api
  *     Switches: -
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: m47_simp.c,v $
- * Revision 1.6  2013/06/18 18:03:40  gv
- * R: 1: Porting to MDIS5
- *    2: Mixing of Tabs & spaces for indentation
- * M: 1: Changed according to MDIS Porting Guide 0.9
- *    2: Cosmetics: Set all indentations with hard tab caraters.
- *
- * Revision 1.5  2010/09/02 10:36:08  UFranke
- * R: VxWorks DIAB error (dcc:1551): argument type does not match prototype
- * M: type cast
- *
- * Revision 1.4  2004/08/24 16:10:18  dpfeuffer
- * unused RCSid removed
- *
- * Revision 1.3  2004/03/23 15:39:46  AGromann
- * updated
- *
- * Revision 1.2  2002/03/20 09:32:31  Schmidt
- * cosmetics
- *
- * Revision 1.1  1999/11/18 15:20:05  Gromann
- * Initial Revision
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 2002..2010 by MEN Mikro Elektronik GmbH, Nuremberg, Germany 
+ * Copyright 2002-2019, MEN Mikro Elektronik GmbH
  ****************************************************************************/
 
-static const char RCSid[]="$Id: m47_simp.c,v 1.6 2013/06/18 18:03:40 gv Exp $";
 
 #include <MEN/men_typs.h>
 
@@ -55,6 +28,8 @@ static const char RCSid[]="$Id: m47_simp.c,v 1.6 2013/06/18 18:03:40 gv Exp $";
 #include <MEN/mdis_api.h>
 #include <MEN/mdis_err.h>
 #include <MEN/m47_drv.h>
+
+static const char IdentString[]=MENT_XSTR(MAK_REVISION);
 
 /*--------------------------------------+
 |   DEFINES                             |
@@ -103,7 +78,7 @@ int main(int argc, char *argv[])
 		printf("Option:\n");
 		printf("    device       device name\n");
 		printf("\n");
-		printf("%s\n", RCSid );
+		printf("%s\n", IdentString );
 		printf("Build %s %s\n", __DATE__, __TIME__ );
 		printf("\n");
 		return(1);

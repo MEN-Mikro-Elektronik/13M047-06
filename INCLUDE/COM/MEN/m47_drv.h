@@ -3,8 +3,6 @@
  *         Name: m47_drv.h
  *
  *       Author: ag
- *        $Date: 2013/06/18 18:03:50 $
- *    $Revision: 2.6 $
  *
  *  Description: Header file for M47 driver
  *               - M47 specific status codes
@@ -13,31 +11,9 @@
  *     Switches: _ONE_NAMESPACE_PER_DRIVER_
  *               _LL_DRV_
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: m47_drv.h,v $
- * Revision 2.6  2013/06/18 18:03:50  gv
- * R: Porting to MDIS
- * M: Changed according to MDIS Porting Guide 0.9
- *
- * Revision 2.5  2004/03/23 15:39:53  AGromann
- * added support for additional feature of HW Rev 2.0:
- * Baudrate, Data Width and Transmission Mode can be set channel specific
- *
- * Revision 2.4  2003/04/09 08:46:01  kp
- * support swapped variant
- *
- * Revision 2.3  1999/11/25 08:58:43  Gromann
- * Updated comments
- *
- * Revision 2.2  1999/11/18 15:20:16  Gromann
- * cosmetics
- *
- * Revision 2.1  1999/11/17 11:46:34  Gromann
- * Initial Revision
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 1999 by MEN mikro elektronik GmbH, Nuernberg, Germany
+ * Copyright 1999-2019, MEN Mikro Elektronik GmbH
  ****************************************************************************/
 
 #ifndef _M47_DRV_H

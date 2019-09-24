@@ -4,8 +4,6 @@
  *      Project: M47 module driver (MDIS5)
  *
  *       Author: ag
- *        $Date: 2013/06/18 18:03:38 $
- *    $Revision: 1.7 $
  *
  *  Description: Low-level driver for M47 M-Modules
  *
@@ -24,38 +22,9 @@
  *     Required: OSS, DESC, DBG, ID libraries 
  *     Switches: _ONE_NAMESPACE_PER_DRIVER_
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: m47_drv.c,v $
- * Revision 1.7  2013/06/18 18:03:38  gv
- * R: 1: Porting to MDIS5
- *    2: Mixing of Tabs & spaces for indentation
- * M: 1: Changed according to MDIS Porting Guide 0.9
- *    2: Cosmetics: Set all indentations with 4 space caraters.
- *
- * Revision 1.6  2004/08/24 16:10:03  dpfeuffer
- * uses now unique symbol names for swapped/non-swapped variant
- *
- * Revision 1.5  2004/03/23 15:26:39  AGromann
- * added support for additional feature of HW Rev 2.0:
- * Baudrate, Data Width and Transmission Mode can be set channel specific
- *
- * added support for additional feature of HW Rev 2.0:
- * Baudrate, Data Width and Transmission Mode can be set channel specific
- * Revision 1.4  2003/04/09 08:45:56  kp
- * support swapped variant
- *
- * Revision 1.3  2001/01/16 11:40:47  Schmidt
- * some casts added
- *
- * Revision 1.2  1999/11/25 08:51:10  Gromann
- * Updated comments
- *
- * Revision 1.1  1999/11/18 15:19:57  Gromann
- * Initial Revision
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 2003 by MEN Mikro Elektronik GmbH, Nuremberg, Germany
+ * Copyright 2003-2019, MEN Mikro Elektronik GmbH
  ****************************************************************************/
 
 #define _NO_LL_HANDLE       /* ll_defs.h: don't define LL_HANDLE struct */
@@ -156,6 +125,7 @@ typedef struct {
 #include <MEN/ll_entry.h>  /* low-level driver jump table  */
 #include <MEN/m47_drv.h>   /* M47 driver header file */
 
+static const char IdentString[]=MENT_XSTR(MAK_REVISION);
 
 /*-----------------------------------------+
 |  PROTOTYPES                              |
@@ -1566,7 +1536,7 @@ static int32 M47_Info(
  ****************************************************************************/
 static char* Ident( void )    /* nodoc */
 {
-    return( "M47 - M47 low level driver: $Id: m47_drv.c,v 1.7 2013/06/18 18:03:38 gv Exp $" );
+    return( (char*) IdentString );
 }
 
 /********************************* Cleanup **********************************

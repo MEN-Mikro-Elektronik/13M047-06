@@ -5,8 +5,6 @@
  ****************************************************************************
  *  
  *       Author: ag
- *        $Date: 2013/06/18 18:03:42 $
- *    $Revision: 1.4 $
  *
  *  Description: M47 tool program
  *
@@ -20,31 +18,11 @@
  *     Required: libraries: mdis_api, usr_oss
  *     Switches: VXWORKS
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: m47_tool.c,v $
- * Revision 1.4  2013/06/18 18:03:42  gv
- * R: 1: Porting to MDIS5
- *    2: Mixing of Tabs & spaces for indentation
- * M: 1: Changed according to MDIS Porting Guide 0.9
- *    2: Cosmetics: Set all indentations with hard tab caraters.
- *
- * Revision 1.3  2010/09/02 10:36:24  UFranke
- * R: VxWorks DIAB error (dcc:1551): argument type does not match prototype
- * M: type cast
- *
- * Revision 1.2  2004/08/24 16:10:21  dpfeuffer
- * stdlib.h added
- *
- * Revision 1.1  2004/03/23 15:39:48  AGromann
- * Initial Revision
- *
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 2003..2010 by MEN mikro elektronik GmbH, Nuernberg, Germany 
+ * Copyright 2003-2019, MEN Mikro Elektronik GmbH
  ****************************************************************************/
  
-static const char RCSid[]="$Id: m47_tool.c,v 1.4 2013/06/18 18:03:42 gv Exp $";
  
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +32,8 @@ static const char RCSid[]="$Id: m47_tool.c,v 1.4 2013/06/18 18:03:42 gv Exp $";
 #include <MEN/mdis_api.h>
 #include <MEN/mdis_err.h>
 #include <MEN/m47_drv.h>
+
+static const char IdentString[]=MENT_XSTR(MAK_REVISION);
 
 /*--------------------------------------+
 |   DEFINES                             |
@@ -104,7 +84,7 @@ int main(int argc, char *argv[])
 		printf("Option:\n");
 		printf("    device       device name\n");
 		printf("\n");
-		printf("%s\n", RCSid );
+		printf("%s\n", IdentString );
 		printf("Build %s %s\n", __DATE__, __TIME__ );
 		printf("\n");
 		return(1);

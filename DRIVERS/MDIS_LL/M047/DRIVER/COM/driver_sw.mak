@@ -1,24 +1,21 @@
 #***************************  M a k e f i l e  *******************************
 #
 #         Author: kp
-#          $Date: 2003/04/09 08:45:58 $
-#      $Revision: 1.1 $
 #
 #    Description: Makefile definitions for the M47 driver (swapped version)
 #
-#---------------------------------[ History ]---------------------------------
-#
-#   $Log: driver_sw.mak,v $
-#   Revision 1.1  2003/04/09 08:45:58  kp
-#   Initial Revision
-#
 #-----------------------------------------------------------------------------
-#   (c) Copyright 2003 by MEN mikro elektronik GmbH, Nuernberg, Germany
+#   Copyright 2003-2019, MEN Mikro Elektronik GmbH
 #*****************************************************************************
 
 MAK_NAME=m47_sw
+# the next line is updated during the MDIS installation
+STAMPED_REVISION="_"
+
+DEF_REVISION=MAK_REVISION=$(STAMPED_REVISION)
 
 MAK_SWITCH=$(SW_PREFIX)MAC_MEM_MAPPED\
+		$(SW_PREFIX)$(DEF_REVISION) \
 		   $(SW_PREFIX)MAC_BYTESWAP\
 		   $(SW_PREFIX)ID_SW\
 
