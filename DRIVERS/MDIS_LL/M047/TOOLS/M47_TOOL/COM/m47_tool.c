@@ -141,7 +141,7 @@ static int _m47_tool( char *devName, int32 ch )
 
 	device = devName;
 	chan = ch;
-
+	(void) chan;
 	printf("\n++++ M47_Tool ++++\n");
 
 	/*--------------------+
@@ -333,7 +333,10 @@ static int32 GetValue(int32 def)
 	int32 val;
 
 	printf("[%02ld]: ", def );
-	fgets( buf, sizeof(buf), stdin );
+	if( !fgets( buf, sizeof(buf), stdin ) ) {
+		PrintError("fgets()");
+		return def;
+	}
 
 	if( buf[0] == '\n' )
 		return def;

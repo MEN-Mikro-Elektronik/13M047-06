@@ -746,7 +746,6 @@ static int32 M47_SetStat(
     u_int16 count;
     
     int32 value = (int32)value32_or_64; /* 32bit value */
-    INT32_OR_64 valueP = value32_or_64; /* stores 32/64bit pointer */
     
     count = 0;
     n     = DATABUFSIZE;
