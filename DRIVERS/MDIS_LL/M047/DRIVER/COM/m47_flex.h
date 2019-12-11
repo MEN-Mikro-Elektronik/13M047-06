@@ -1,3 +1,13 @@
+/*
+ *  Code that is loaded into a PLD by the driver
+ *
+ *  Copyright 2019 MEN Mikro Elektronik GmbH
+ *
+ *  This binary code is not part of the driver and proprietary.
+ *  Reproduction and distribution is permitted for all customers
+ *  of MEN Mikro Elektronik GmbH.
+ */
+
 #ifndef _ONE_NAMESPACE_PER_DRIVER_
 	/* variant for swapped access */
 #	ifdef ID_SW
