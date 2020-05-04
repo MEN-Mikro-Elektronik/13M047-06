@@ -1,7 +1,7 @@
 /*
  *  Code that is loaded into a PLD by the driver
  *
- *  Copyright 2019 MEN Mikro Elektronik GmbH
+ *  Copyright 2019, MEN Mikro Elektronik GmbH
  *
  *  This binary code is not part of the driver and proprietary.
  *  Reproduction and distribution is permitted for all customers
