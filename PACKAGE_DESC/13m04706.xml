@@ -80,7 +80,7 @@
 			<name>m47_test</name>
 			<description>Test program for the M47 driver</description>
 			<type>Driver Specific Tool</type>
-			<makefilepath>M047/TEST/M47_TEST/COM/program.mak</makefilepath>
+			<makefilepath>M047/TOOLS/M47_TEST/COM/program.mak</makefilepath>
 		</swmodule>
 	</swmodulelist>
 </package>
